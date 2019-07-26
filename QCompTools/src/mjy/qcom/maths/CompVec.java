@@ -1,27 +1,28 @@
 package mjy.qcom.maths;
 
-public class CompVec {
-
-	private ComplexNum[] vector;
+public class CompVec extends CompMat{
 	
 	public CompVec(ComplexNum[] vector) {
-		this.vector = vector;
+		super(vector);
 	}
 	
+	//Need to add Constructor to take a matrix that can be converted to a vector
+	
 	public ComplexNum getI(int index) {
-		return vector[index];
+		return super.getCjk(0, index);
 	}
 	
 	public int getDimensionality() {
-		return vector.length + 1;
+		int[] temp = super.getDimensions();
+		return temp[1] + 1;
 	}
 	
 	@Override
 	public String toString() {
 		String result = "[";
-		for(int i = 0; i < vector.length; i++) {
-			result += "(" + vector[i] + ")";
-			if(i < vector.length - 1) result += ",\n";
+		for(int i = 0; i < this.getDimensionality() - 1; i++) {
+			result += "(" + getI(i) + ")";
+			if(i < this.getDimensionality() - 2) result += ", ";
 		}
 		result += "]";
 		return result;

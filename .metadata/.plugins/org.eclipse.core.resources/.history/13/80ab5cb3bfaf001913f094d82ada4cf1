@@ -1,0 +1,25 @@
+package mjy.qcom.maths;
+
+public class CompMat {
+
+	private ComplexNum[][] mat;
+
+	public CompMat(ComplexNum[][] mat) {
+		this.mat = mat;
+	}
+	
+	protected CompMat(ComplexNum[] vec) {
+		ComplexNum[][] temp = {vec};
+		this.mat = temp;
+	}
+
+	@Override
+	public String toString() {
+		String res = "[";
+		for(ComplexNum[] row: mat) {
+			res += row + "\n";
+		}
+		return res;
+	}
+	
+}

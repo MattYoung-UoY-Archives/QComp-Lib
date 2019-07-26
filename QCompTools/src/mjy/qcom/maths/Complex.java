@@ -50,4 +50,19 @@ public class Complex {
 		return scalarMultiply(v, new ComplexNum(-1, 0));
 	}
 	
+	public static CompMat transpose(CompMat m) {
+		int[] dims = m.getDimensions();
+		ComplexNum[][] res = new ComplexNum[dims[1]][dims[0]];
+		for(int j = 0; j < res.length; j++) {
+			for(int k = 0; k < res[0].length; k++) {
+				res[j][k] = m.getCjk(k, j);
+			}
+		}
+		return new CompMat(res);
+	}
+	
+//	public static CompMat add(CompMat m, CompMat n) {
+		
+//	}
+	
 }
