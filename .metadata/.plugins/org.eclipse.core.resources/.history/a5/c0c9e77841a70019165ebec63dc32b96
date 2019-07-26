@@ -1,0 +1,25 @@
+package mjy.qcom.maths;
+
+public class ComplexNum {
+
+	private float r, i;
+	
+	public ComplexNum(float r, float i) {
+		this.r = r;
+		this.i = i;
+	}
+
+	public float getR() {
+		return r;
+	}
+
+	public float getI() {
+		return i;
+	}
+	
+	@Override
+	public void toString() {
+		return r + " + " + i + "i"
+	}
+	
+}

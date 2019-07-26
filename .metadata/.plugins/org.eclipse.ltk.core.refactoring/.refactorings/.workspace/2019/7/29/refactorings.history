@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;Exercises&apos; to &apos;QCompTools&apos;" description="Rename resource &apos;Exercises&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="/Exercises" name="QCompTools" stamp="1563296950784" updateReferences="true"/>
+</session>

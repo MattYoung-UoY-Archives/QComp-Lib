@@ -1,0 +1,26 @@
+package mjy.qcom.maths;
+
+public class ComplexNum {
+
+	private float r, i, theta, rho;
+	
+	public ComplexNum(float r, float i) {
+		this.r = r;
+		this.i = i;
+		theta = (float) Math.atan(i/r);
+	}
+
+	public float getR() {
+		return r;
+	}
+
+	public float getI() {
+		return i;
+	}
+	
+	@Override
+	public String toString() {
+		return r + " + " + i + "i";
+	}
+	
+}

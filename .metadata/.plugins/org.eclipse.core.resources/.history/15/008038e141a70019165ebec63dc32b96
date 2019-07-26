@@ -1,0 +1,17 @@
+package mjy.qcom;
+
+import mjy.qcom.maths.ComplexNum;
+
+public class Main {
+
+	public static void main(String[] args) {
+		
+		ComplexNum a = new ComplexNum(3.64f, 1.75f);
+		ComplexNum b = new ComplexNum(2.39f, 6.41f);
+		
+		System.out.println("a: " + a + "\nb: " + b);
+
+		
+	}
+	
+}
