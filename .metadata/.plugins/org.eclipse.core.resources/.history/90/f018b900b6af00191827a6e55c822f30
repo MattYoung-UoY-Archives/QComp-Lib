@@ -1,0 +1,21 @@
+package mjy.qcom;
+
+import mjy.qcom.maths.CompVec;
+import mjy.qcom.maths.ComplexNum;
+
+public class Chapter2Test {
+
+	public static void main(String[] args) {
+		
+		ComplexNum a = new ComplexNum(6, 3);
+		ComplexNum b = new ComplexNum(0, 0);
+		ComplexNum c = new ComplexNum(5, 1);
+		ComplexNum d = new ComplexNum(4, 0);
+		ComplexNum[] vec = {a, b, c, d};
+		
+		CompVec testVec = new CompVec(vec);
+	
+	
+	}
+	
+}

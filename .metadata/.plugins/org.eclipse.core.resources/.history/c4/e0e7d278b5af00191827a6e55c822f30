@@ -1,0 +1,11 @@
+package mjy.qcom.maths;
+
+public class CompVec {
+
+	private ComplexNum[] vector;
+	
+	public CompVec(int dimensions) {
+		vector = new ComplexNum[dimensions];
+	}
+	
+}

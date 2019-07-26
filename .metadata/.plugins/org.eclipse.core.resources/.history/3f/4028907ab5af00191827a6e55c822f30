@@ -1,0 +1,12 @@
+package mjy.qcom.maths;
+
+public class CompVec {
+
+	private ComplexNum[] vector;
+	
+	public CompVec(ComplexNum[] vector) {
+		this.vector = vector;
+		
+	}
+	
+}

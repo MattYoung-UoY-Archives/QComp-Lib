@@ -34,6 +34,11 @@ public class Main {
 		
 		System.out.println("\nMod a: " + modA + "\nConjugate a: " + conjA);
 		
+		ComplexNum c = new ComplexNum(1.5f, 2);
+		ComplexNum scalar = new ComplexNum(2, 0);
+		
+		System.out.println("\n" + Complex.multiply(c, scalar));
+		
 	}
 	
 }

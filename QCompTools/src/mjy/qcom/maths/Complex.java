@@ -31,4 +31,23 @@ public class Complex {
 		return new ComplexNum(a.getR(), -a.getI());
 	}
 	
+	public static CompVec add(CompVec v, CompVec w) {
+		if(v.getDimensionality() != w.getDimensionality()) throw new IllegalArgumentException("The two vectors specified must be of the same dimensionality!");
+		ComplexNum[] res = new ComplexNum[v.getDimensionality()-1];
+		for(int i = 0; i < v.getDimensionality()-1; i++) 
+			res[i] = add(v.getI(i), w.getI(i));
+		return new CompVec(res);
+	}
+	
+	public static CompVec scalarMultiply(CompVec v, ComplexNum c) {
+		ComplexNum[] res = new ComplexNum[v.getDimensionality()-1];
+		for(int i = 0; i < v.getDimensionality() - 1; i++)
+			res[i] = multiply(v.getI(i), c);
+		return new CompVec(res);
+	}
+	
+	public static CompVec inverse(CompVec v) {
+		return scalarMultiply(v, new ComplexNum(-1, 0));
+	}
+	
 }
