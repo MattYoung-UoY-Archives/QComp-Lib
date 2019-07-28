@@ -31,25 +31,6 @@ public class Complex {
 		return new ComplexNum(a.getR(), -a.getI());
 	}
 	
-	public static CompVec add(CompVec v, CompVec w) {
-		if(v.getDimensionality() != w.getDimensionality()) throw new IllegalArgumentException("The two vectors specified must be of the same dimensionality!");
-		ComplexNum[] res = new ComplexNum[v.getDimensionality()-1];
-		for(int i = 0; i < v.getDimensionality()-1; i++) 
-			res[i] = add(v.getI(i), w.getI(i));
-		return new CompVec(res);
-	}
-	
-	public static CompVec scalarMultiply(CompVec v, ComplexNum c) {
-		ComplexNum[] res = new ComplexNum[v.getDimensionality()-1];
-		for(int i = 0; i < v.getDimensionality() - 1; i++)
-			res[i] = multiply(v.getI(i), c);
-		return new CompVec(res);
-	}
-	
-	public static CompVec inverse(CompVec v) {
-		return scalarMultiply(v, new ComplexNum(-1, 0));
-	}
-	
 	public static CompMat transpose(CompMat m) {
 		int[] dims = m.getDimensions();
 		ComplexNum[][] res = new ComplexNum[dims[1]][dims[0]];
@@ -61,8 +42,39 @@ public class Complex {
 		return new CompMat(res);
 	}
 	
-//	public static CompMat add(CompMat m, CompMat n) {
-		
-//	}
+	public static CompMat add(CompMat m, CompMat n) {
+		int[] sizeM = m.getDimensions();
+		if((sizeM[0] != n.getDimensions()[0]) || (sizeM[1] != n.getDimensions()[1]))
+			throw new IllegalArgumentException("The two matrices must have the same dimensions!\n\nMatrix 1: " + m + "\n\nMatrix 2: " + n);
+		ComplexNum[][] res = new ComplexNum[sizeM[0]][sizeM[1]];
+		for(int j = 0; j < sizeM[0]; j++) {
+			for(int k = 0; k < sizeM[1]; k++) {
+				res[j][k] = add(m.getCjk(j, k), n.getCjk(j, k));
+			}
+		}
+		return new CompMat(res);
+	}
+	
+	public static CompMat inverse(CompMat m) {
+		int[] sizeM = m.getDimensions();
+		ComplexNum[][] res = new ComplexNum[sizeM[0]][sizeM[1]];
+		for(int j = 0; j < sizeM[0]; j++) {
+			for(int k = 0; k < sizeM[1]; k++) {
+				res[j][k] = multiply(m.getCjk(j, k), new ComplexNum(-1, 0));
+			}
+		}
+		return new CompMat(res);
+	}
+	
+	public static CompMat scalarMult(ComplexNum c, CompMat m) {
+		int[] sizeM = m.getDimensions();
+		ComplexNum[][] res = new ComplexNum[sizeM[0]][sizeM[1]];
+		for(int j = 0; j < sizeM[0]; j++) {
+			for(int k = 0; k < sizeM[1]; k++) {
+				res[j][k] = multiply(m.getCjk(j, k), c);
+			}
+		}
+		return new CompMat(res);
+	}
 	
 }
