@@ -1,5 +1,7 @@
 package mjy.qcom;
 
+import java.util.Arrays;
+
 import mjy.qcom.maths.CompMat;
 import mjy.qcom.maths.Complex;
 import mjy.qcom.maths.ComplexNum;
@@ -38,7 +40,25 @@ public class Chapter2Test {
 
 		System.out.println(testVec);
 		System.out.println(Complex.inverse(testVec));
-		System.out.println(Complex.transpose(testVec));
+		System.out.println(Complex.transpose(testVec) + "\n");
+		
+		System.out.println(Arrays.toString(testVec.getDimensions()));
+		System.out.println(Arrays.toString(Complex.transpose(testVec).getDimensions()) + "\n");
+		
+		
+		
+		
+		ComplexNum[][] multAvec = {{new ComplexNum(3, 2), new ComplexNum(0, 0), new ComplexNum(5, -6)}, 
+								{new ComplexNum(1, 0), new ComplexNum(4, 2), new ComplexNum(0, 1)}, 
+								{new ComplexNum(4, -1), new ComplexNum(0, 0), new ComplexNum(4, 0)}};
+		CompMat multA = new CompMat(multAvec);
+		
+		ComplexNum[][] multBvec = {{new ComplexNum(5, 0), new ComplexNum(2, -1), new ComplexNum(6, -4)},
+								{new ComplexNum(0, 0), new ComplexNum(4, 5), new ComplexNum(2, 0)},
+								{new ComplexNum(7, -4), new ComplexNum(2, 7), new ComplexNum(0, 0)}};
+		CompMat multB = new CompMat(multBvec);
+		
+		System.out.println(Complex.matMult(multA, multB));
 		
 	}
 	

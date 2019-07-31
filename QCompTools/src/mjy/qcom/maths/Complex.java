@@ -1,5 +1,7 @@
 package mjy.qcom.maths;
 
+import java.util.Arrays;
+
 public class Complex {
 
 	public static ComplexNum add(ComplexNum a, ComplexNum b) {
@@ -76,5 +78,34 @@ public class Complex {
 		}
 		return new CompMat(res);
 	}
+	
+	public static CompMat matMult(CompMat a, CompMat b) {
+		int[] sizeA = a.getDimensions(),
+				sizeB = b.getDimensions(),
+				sizeC = {sizeA[0], sizeB[1]};
+		if(sizeA[1] != sizeB[0]) throw new IllegalArgumentException("Matrix A must have the same number of columns as Matrix B has rows!");
+		ComplexNum[][] res = new ComplexNum[sizeC[0]][sizeC[1]];
+		for(int row = 0; row < sizeC[0]; row++) {
+			for(int col = 0; col < sizeC[1]; col++) {
+				res[row][col] = multRes(a, b, row, col);
+			}
+		}
+		return new CompMat(res);
+	}
+	
+	private static ComplexNum multRes(CompMat a, CompMat b, int row, int col) {
+		ComplexNum res = new ComplexNum(0, 0);
+		ComplexNum[] resParts = new ComplexNum[a.getDimensions()[1]];
+		
+		for(int i = 0; i < resParts.length; i++) {
+			resParts[i] = Complex.multiply(a.getCjk(row, i), b.getCjk(i, col));
+		}
+		for(ComplexNum part: resParts) {
+			res = Complex.add(res, part);
+		}
+		
+		return res;
+	}
+	
 	
 }

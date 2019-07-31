@@ -29,7 +29,7 @@ public class ComplexNum {
 
 	@Override
 	public String toString() {
-		return r + " + " + i + "i";
+		return "(" + r + " + " + i + "i)";
 	}
 	
 	public boolean equals(ComplexNum a) {
