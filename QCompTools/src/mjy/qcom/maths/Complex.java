@@ -57,7 +57,7 @@ public class Complex {
 		return new CompMat(res);
 	}
 	
-	public static CompMat inverse(CompMat m) {
+	public static CompMat invert(CompMat m) {
 		int[] sizeM = m.getDimensions();
 		ComplexNum[][] res = new ComplexNum[sizeM[0]][sizeM[1]];
 		for(int j = 0; j < sizeM[0]; j++) {
@@ -107,5 +107,23 @@ public class Complex {
 		return res;
 	}
 	
+	public static CompMat vecMult(CompMat mat, CompMat vec) {
+		int[] matDim = mat.getDimensions(),
+				vecDim = vec.getDimensions();
+		if(vecDim[1] != 1) throw new IllegalArgumentException("The matrix specified as the vector is not a vector!");
+		if(matDim[1] != vecDim[0]) throw new IllegalArgumentException("N-Dimensional vector and MxM matrix specified!");
+		return matMult(mat, vec);
+	}
+	
+	public static CompMat identityMat(int n) {
+		ComplexNum[][] resArr = new ComplexNum[n][n];
+		for(int i = 0; i < n; i++) {
+			for(int j = 0; j < n; j++) {
+				if(i == j) resArr[i][j] = new ComplexNum(1, 0);
+				else resArr[i][j] = new ComplexNum(0, 0);
+			}
+		}
+		return new CompMat(resArr);
+	}
 	
 }

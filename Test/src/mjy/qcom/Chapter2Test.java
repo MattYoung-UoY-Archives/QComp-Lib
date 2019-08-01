@@ -39,7 +39,7 @@ public class Chapter2Test {
 		System.out.println(Complex.scalarMult(new ComplexNum(8, -2), testVec3) + "\n");
 
 		System.out.println(testVec);
-		System.out.println(Complex.inverse(testVec));
+		System.out.println(Complex.invert(testVec));
 		System.out.println(Complex.transpose(testVec) + "\n");
 		
 		System.out.println(Arrays.toString(testVec.getDimensions()));
@@ -58,7 +58,23 @@ public class Chapter2Test {
 								{new ComplexNum(7, -4), new ComplexNum(2, 7), new ComplexNum(0, 0)}};
 		CompMat multB = new CompMat(multBvec);
 		
-		System.out.println(Complex.matMult(multA, multB));
+		System.out.println(Complex.matMult(multA, multB) + "\n\n\n\n");
+		
+		
+		
+		
+		ComplexNum[][] startVecArr = {{new ComplexNum(7.2f, -1.7f)},
+									{new ComplexNum(0, 4.1f)}};
+		CompMat startVec = new CompMat(startVecArr);
+		
+		CompMat action = Complex.identityMat(2);
+		
+		System.out.println(action + "\n");
+		System.out.println(Complex.vecMult(action, startVec));
+		
+		action = Complex.invert(action);
+
+		System.out.println(Complex.vecMult(action, startVec));
 		
 	}
 	
