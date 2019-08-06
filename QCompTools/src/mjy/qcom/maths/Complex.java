@@ -1,7 +1,5 @@
 package mjy.qcom.maths;
 
-import java.util.Arrays;
-
 public class Complex {
 
 	public static ComplexNum add(ComplexNum a, ComplexNum b) {
@@ -25,11 +23,25 @@ public class Complex {
 		return new ComplexNum(x, y);
 	}
 	
+	public static ComplexNum[] nthRoot(ComplexNum a, int n) {
+		ComplexNum[] res = new ComplexNum[n];
+		float theta = a.getTheta(), rho = a.getMod();
+		
+		float rhoRes = (float) Math.pow(Math.E, Math.log(rho)/n);
+		
+		for(int k = 0; k < n; k++) {
+			float thetaRes = (float) ((theta + (k * 2 * Math.PI))/n);
+			res[k] = new ComplexNum((float) (rhoRes * Math.cos(thetaRes)), (float) (rhoRes * Math.sin(thetaRes)));
+		}
+		
+		return res;
+	}
+	
 	protected static float mod(ComplexNum a) {
 		return (float) Math.sqrt((a.getR() * a.getR()) + (a.getI() * a.getI()));
 	}
 	
-	public static ComplexNum conj(ComplexNum a) {
+	public static ComplexNum compConj(ComplexNum a) {
 		return new ComplexNum(a.getR(), -a.getI());
 	}
 	
@@ -57,7 +69,7 @@ public class Complex {
 		return new CompMat(res);
 	}
 	
-	public static CompMat invert(CompMat m) {
+	public static CompMat negate(CompMat m) {
 		int[] sizeM = m.getDimensions();
 		ComplexNum[][] res = new ComplexNum[sizeM[0]][sizeM[1]];
 		for(int j = 0; j < sizeM[0]; j++) {
@@ -124,6 +136,53 @@ public class Complex {
 			}
 		}
 		return new CompMat(resArr);
+	}
+	
+	public static CompMat conjMat(CompMat mat) {
+		int[] matDim = mat.getDimensions();
+		ComplexNum[][] resArr = new ComplexNum[matDim[0]][matDim[1]];
+		for(int j = 0; j < matDim[0]; j++) {
+			for(int k = 0; k < matDim[1]; k++) {
+				resArr[j][k] = compConj(mat.getCjk(j, k));
+			}
+		}
+		return new CompMat(resArr);
+	}
+	
+	public static CompMat adjoint(CompMat mat) {
+		CompMat res = transpose(mat);
+		res = conjMat(res); 
+		return res;
+	}
+	
+	public static ComplexNum innerProductVec(CompMat vec1, CompMat vec2) {
+		int[] vec1Dim = vec1.getDimensions(),
+				vec2Dim = vec2.getDimensions();
+		if(vec1Dim[1] != 1) throw new IllegalArgumentException("The matrix specified as the first vector is not a vector!");
+		if(vec2Dim[1] != 1) throw new IllegalArgumentException("The matrix specified as the second vector is not a vector!");
+		if(vec1Dim[0] != vec2Dim[0]) throw new IllegalArgumentException("The specified vectors are not of the same dimension!");
+		return matMult(adjoint(vec1), vec2).getCjk(0, 0);
+	}
+	
+	public static ComplexNum trace(CompMat mat) {
+		int[] matDim = mat.getDimensions();
+		if(matDim[0] != matDim[1]) throw new IllegalArgumentException("Trace cannot be performed on an nXm matrix!");
+		ComplexNum res = new ComplexNum(0, 0);
+		for(int i = 0; i < matDim[0]; i++) res = add(res, mat.getCjk(i, i));
+		return res;
+	}
+	
+	public static ComplexNum innerProductMat(CompMat mat1, CompMat mat2) {
+		int[] mat1Dim = mat1.getDimensions(),
+				mat2Dim = mat2.getDimensions();
+		if(mat1Dim[0] != mat2Dim[0]) throw new IllegalArgumentException("The matrices specified need to have the same number of rows!");
+		return trace(matMult(adjoint(mat1), mat2));
+	}
+	
+	public static float normVec(CompMat vec) {
+		int[] vecDim = vec.getDimensions();
+		if(vecDim[1] != 1) throw new IllegalArgumentException("The matrix specified as the vector is not a vector!");
+		return (float) Math.sqrt(innerProductVec(vec, vec).getR());
 	}
 	
 }

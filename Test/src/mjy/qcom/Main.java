@@ -30,7 +30,7 @@ public class Main {
 		System.out.println("\nSub: " + sub + "\nDiv: " + div);
 		
 		float modA = a.getMod();
-		ComplexNum conjA = Complex.conj(a);
+		ComplexNum conjA = Complex.compConj(a);
 		
 		System.out.println("\nMod a: " + modA + "\nConjugate a: " + conjA);
 		

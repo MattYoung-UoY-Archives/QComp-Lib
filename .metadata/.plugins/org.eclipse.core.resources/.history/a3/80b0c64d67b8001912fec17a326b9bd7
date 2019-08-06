@@ -1,0 +1,184 @@
+package mjy.qcom.maths;
+
+public class Complex {
+
+	public static ComplexNum add(ComplexNum a, ComplexNum b) {
+		return new ComplexNum(a.getR() + b.getR(), a.getI() + b.getI());
+	}
+	
+	public static ComplexNum multiply(ComplexNum a, ComplexNum b) {
+		float real = (a.getR() * b.getR()) - (a.getI() * b.getI());
+		float imaginary = (a.getR() * b.getI()) + (a.getI() * b.getR());
+		return new ComplexNum(real, imaginary);
+	}
+	
+	public static ComplexNum sub(ComplexNum a, ComplexNum b) {
+		return new ComplexNum(a.getR() - b.getR(), a.getI() - b.getI());
+	}
+	
+	public static ComplexNum div(ComplexNum a, ComplexNum b) {
+		float modSqr = (b.getR() * b.getR()) + (b.getI() * b.getI());
+		float x = ((a.getR() * b.getR()) + (a.getI() * b.getI()))/modSqr;
+		float y = ((b.getR() * a.getI()) - (a.getR() * b.getI()))/modSqr;
+		return new ComplexNum(x, y);
+	}
+	
+	public static ComplexNum[] nthRoot(ComplexNum a, int n) {
+		ComplexNum[] res = new ComplexNum[n];
+		float theta = a.getTheta(), rho = a.getMod();
+		
+		float rhoRes = (float) Math.pow(rho, 1/n);
+		System.out.println(rho);
+		
+		for(int k = 0; k < n; k++) {
+			float thetaRes = (float) ((theta + (k * 2 * Math.PI))/n);
+			System.out.println(thetaRes);
+			res[k] = new ComplexNum((float) (rhoRes * Math.cos(thetaRes)), (float) (rhoRes * Math.sin(thetaRes)));
+		}
+		
+		return res;
+	}
+	
+	protected static float mod(ComplexNum a) {
+		return (float) Math.sqrt((a.getR() * a.getR()) + (a.getI() * a.getI()));
+	}
+	
+	public static ComplexNum compConj(ComplexNum a) {
+		return new ComplexNum(a.getR(), -a.getI());
+	}
+	
+	public static CompMat transpose(CompMat m) {
+		int[] dims = m.getDimensions();
+		ComplexNum[][] res = new ComplexNum[dims[1]][dims[0]];
+		for(int j = 0; j < res.length; j++) {
+			for(int k = 0; k < res[0].length; k++) {
+				res[j][k] = m.getCjk(k, j);
+			}
+		}
+		return new CompMat(res);
+	}
+	
+	public static CompMat add(CompMat m, CompMat n) {
+		int[] sizeM = m.getDimensions();
+		if((sizeM[0] != n.getDimensions()[0]) || (sizeM[1] != n.getDimensions()[1]))
+			throw new IllegalArgumentException("The two matrices must have the same dimensions!\n\nMatrix 1: " + m + "\n\nMatrix 2: " + n);
+		ComplexNum[][] res = new ComplexNum[sizeM[0]][sizeM[1]];
+		for(int j = 0; j < sizeM[0]; j++) {
+			for(int k = 0; k < sizeM[1]; k++) {
+				res[j][k] = add(m.getCjk(j, k), n.getCjk(j, k));
+			}
+		}
+		return new CompMat(res);
+	}
+	
+	public static CompMat negate(CompMat m) {
+		int[] sizeM = m.getDimensions();
+		ComplexNum[][] res = new ComplexNum[sizeM[0]][sizeM[1]];
+		for(int j = 0; j < sizeM[0]; j++) {
+			for(int k = 0; k < sizeM[1]; k++) {
+				res[j][k] = multiply(m.getCjk(j, k), new ComplexNum(-1, 0));
+			}
+		}
+		return new CompMat(res);
+	}
+	
+	public static CompMat scalarMult(ComplexNum c, CompMat m) {
+		int[] sizeM = m.getDimensions();
+		ComplexNum[][] res = new ComplexNum[sizeM[0]][sizeM[1]];
+		for(int j = 0; j < sizeM[0]; j++) {
+			for(int k = 0; k < sizeM[1]; k++) {
+				res[j][k] = multiply(m.getCjk(j, k), c);
+			}
+		}
+		return new CompMat(res);
+	}
+	
+	public static CompMat matMult(CompMat a, CompMat b) {
+		int[] sizeA = a.getDimensions(),
+				sizeB = b.getDimensions(),
+				sizeC = {sizeA[0], sizeB[1]};
+		if(sizeA[1] != sizeB[0]) throw new IllegalArgumentException("Matrix A must have the same number of columns as Matrix B has rows!");
+		ComplexNum[][] res = new ComplexNum[sizeC[0]][sizeC[1]];
+		for(int row = 0; row < sizeC[0]; row++) {
+			for(int col = 0; col < sizeC[1]; col++) {
+				res[row][col] = multRes(a, b, row, col);
+			}
+		}
+		return new CompMat(res);
+	}
+	
+	private static ComplexNum multRes(CompMat a, CompMat b, int row, int col) {
+		ComplexNum res = new ComplexNum(0, 0);
+		ComplexNum[] resParts = new ComplexNum[a.getDimensions()[1]];
+		
+		for(int i = 0; i < resParts.length; i++) {
+			resParts[i] = Complex.multiply(a.getCjk(row, i), b.getCjk(i, col));
+		}
+		for(ComplexNum part: resParts) {
+			res = Complex.add(res, part);
+		}
+		
+		return res;
+	}
+	
+	public static CompMat vecMult(CompMat mat, CompMat vec) {
+		int[] matDim = mat.getDimensions(),
+				vecDim = vec.getDimensions();
+		if(vecDim[1] != 1) throw new IllegalArgumentException("The matrix specified as the vector is not a vector!");
+		if(matDim[1] != vecDim[0]) throw new IllegalArgumentException("N-Dimensional vector and MxM matrix specified!");
+		return matMult(mat, vec);
+	}
+	
+	public static CompMat identityMat(int n) {
+		ComplexNum[][] resArr = new ComplexNum[n][n];
+		for(int i = 0; i < n; i++) {
+			for(int j = 0; j < n; j++) {
+				if(i == j) resArr[i][j] = new ComplexNum(1, 0);
+				else resArr[i][j] = new ComplexNum(0, 0);
+			}
+		}
+		return new CompMat(resArr);
+	}
+	
+	public static CompMat conjMat(CompMat mat) {
+		int[] matDim = mat.getDimensions();
+		ComplexNum[][] resArr = new ComplexNum[matDim[0]][matDim[1]];
+		for(int j = 0; j < matDim[0]; j++) {
+			for(int k = 0; k < matDim[1]; k++) {
+				resArr[j][k] = compConj(mat.getCjk(j, k));
+			}
+		}
+		return new CompMat(resArr);
+	}
+	
+	public static CompMat adjoint(CompMat mat) {
+		CompMat res = transpose(mat);
+		res = conjMat(res); 
+		return res;
+	}
+	
+	public static ComplexNum innerProductVec(CompMat vec1, CompMat vec2) {
+		int[] vec1Dim = vec1.getDimensions(),
+				vec2Dim = vec2.getDimensions();
+		if(vec1Dim[1] != 1) throw new IllegalArgumentException("The matrix specified as the first vector is not a vector!");
+		if(vec2Dim[1] != 1) throw new IllegalArgumentException("The matrix specified as the second vector is not a vector!");
+		if(vec1Dim[0] != vec2Dim[0]) throw new IllegalArgumentException("The specified vectors are not of the same dimension!");
+		return matMult(adjoint(vec1), vec2).getCjk(0, 0);
+	}
+	
+	public static ComplexNum trace(CompMat mat) {
+		int[] matDim = mat.getDimensions();
+		if(matDim[0] != matDim[1]) throw new IllegalArgumentException("Trace cannot be performed on an nXm matrix!");
+		ComplexNum res = new ComplexNum(0, 0);
+		for(int i = 0; i < matDim[0]; i++) res = add(res, mat.getCjk(i, i));
+		return res;
+	}
+	
+	public static ComplexNum innerProductMat(CompMat mat1, CompMat mat2) {
+		int[] mat1Dim = mat1.getDimensions(),
+				mat2Dim = mat2.getDimensions();
+		if(mat1Dim[0] != mat2Dim[0]) throw new IllegalArgumentException("The matrices specified need to have the same number of rows!");
+		return trace(matMult(adjoint(mat1), mat2));
+	}
+	
+}

@@ -15,7 +15,6 @@ public class Chapter2Test {
 		ComplexNum c = new ComplexNum(0.53f, -6);
 		ComplexNum d = new ComplexNum(12, 0);
 		ComplexNum[][] vec = {{a}, {b}, {c}, {d}};
-		
 		CompMat testVec = new CompMat(vec);
 		
 		ComplexNum a2 = new ComplexNum(7, -8);
@@ -23,7 +22,6 @@ public class Chapter2Test {
 		ComplexNum c2 = new ComplexNum(2, 0);
 		ComplexNum d2 = new ComplexNum(9.4f, 3);
 		ComplexNum[][] vec2 = {{a2}, {b2}, {c2}, {d2}};
-		
 		CompMat testVec2 = new CompMat(vec2);
 		
 		System.out.println(Complex.add(testVec, testVec2) + "\n");
@@ -39,7 +37,7 @@ public class Chapter2Test {
 		System.out.println(Complex.scalarMult(new ComplexNum(8, -2), testVec3) + "\n");
 
 		System.out.println(testVec);
-		System.out.println(Complex.invert(testVec));
+		System.out.println(Complex.negate(testVec));
 		System.out.println(Complex.transpose(testVec) + "\n");
 		
 		System.out.println(Arrays.toString(testVec.getDimensions()));
@@ -72,7 +70,7 @@ public class Chapter2Test {
 		System.out.println(action + "\n");
 		System.out.println(Complex.vecMult(action, startVec));
 		
-		action = Complex.invert(action);
+		action = Complex.negate(action);
 
 		System.out.println(Complex.vecMult(action, startVec));
 		
