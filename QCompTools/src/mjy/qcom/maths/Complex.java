@@ -1,5 +1,7 @@
 package mjy.qcom.maths;
 
+import java.util.Arrays;
+
 public class Complex {
 
 	public static ComplexNum add(ComplexNum a, ComplexNum b) {
@@ -183,6 +185,56 @@ public class Complex {
 		int[] vecDim = vec.getDimensions();
 		if(vecDim[1] != 1) throw new IllegalArgumentException("The matrix specified as the vector is not a vector!");
 		return (float) Math.sqrt(innerProductVec(vec, vec).getR());
+	}
+	
+	public static float dist(CompMat v1, CompMat v2) {
+		int[] vec1Dim = v1.getDimensions(),
+				vec2Dim = v2.getDimensions();
+		if(vec1Dim[1] != 1) throw new IllegalArgumentException("The matrix specified as the first vector is not a vector!");
+		if(vec2Dim[1] != 1) throw new IllegalArgumentException("The matrix specified as the second vector is not a vector!");
+		return normVec(add(v1, negate(v2)));
+	}
+	
+	public static boolean isHermitian(CompMat m) {
+		CompMat adjM = adjoint(m);
+		return equal(m, adjM, 0.0000001f);
+	}
+	
+	public static boolean isUnitary(CompMat m){
+		CompMat adjM = adjoint(m);
+		CompMat susI = matMult(adjM, m);
+		return equal(susI, identityMat(susI.getDimensions()[0]), 0.0000001f);
+	}
+	
+	public static boolean equal(CompMat a, CompMat b, float tolerance) {
+		boolean isEqual = true;
+		int[] aDims = a.getDimensions();
+		if(!Arrays.equals(aDims, b.getDimensions())) return false;
+		for(int j = 0; j < aDims[1]; j++) {
+			for(int k = 0; k < aDims[0]; k++) {
+				if((Math.abs(a.getCjk(j, k).getR() - b.getCjk(j, k).getR()) > tolerance) || 
+						(Math.abs(a.getCjk(j, k).getI() - b.getCjk(j, k).getI()) > tolerance)) {
+					isEqual = false;
+					break;
+				}
+			}
+			if(!isEqual) break;
+		}
+		return isEqual;
+	}
+	
+	public static CompMat tensorProd(CompMat a, CompMat b) {
+		int[] aDim = a.getDimensions(), bDim = b.getDimensions();
+		if(aDim[0] != aDim[1]) throw new IllegalArgumentException("The first matrix specified is not a square matrix!");
+		if(bDim[0] != bDim[1]) throw new IllegalArgumentException("The second matrix specified is not a square matrix!");
+		int[] resDim = {aDim[0] * bDim[0], aDim[1] * bDim[1]};
+		ComplexNum[][] res = new ComplexNum[resDim[1]][resDim[0]];
+		for(int j = 0; j < resDim[1]; j++) {
+			for(int k = 0; k < resDim[0]; k++) {
+				res[j][k] = multiply(a.getCjk(j/aDim[0], k/bDim[0]), b.getCjk(j%aDim[0], k%bDim[0]));
+			}
+		}
+		return new CompMat(res);
 	}
 	
 }
